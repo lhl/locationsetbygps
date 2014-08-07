@@ -1,0 +1,7 @@
+name	status	update	version
+akismet	inactive	none	3.0.1
+disqus-comment-system	active	none	2.77
+flickr-photostream	active	none	3.1.6
+hello	inactive	none	1.6
+wp-flickr-embed	active	none	1.2.3
+wp-geo	active	none	3.3.8
