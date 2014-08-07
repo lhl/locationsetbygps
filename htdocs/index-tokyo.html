@@ -1,0 +1,48 @@
+<html>
+<head>
+
+<title>Location Set By GPS</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+<!-- Mapbox -->
+<script src="https://api.tiles.mapbox.com/mapbox.js/v1.6.3/mapbox.js"></script>
+<link href="https://api.tiles.mapbox.com/mapbox.js/v1.6.3/mapbox.css" rel="stylesheet" />
+
+<style>
+body { margin: 0; border: 0; padding: 0; }
+#map { position:absolute; top:0; bottom:0; width:100%; }
+
+#content {
+  position: absolute;
+  width: 500px;
+  top: 120px;
+  left: 120px;
+  background: rgba(0,0,0,0.6);
+  padding: 20px;
+  color: white;
+  font-family: Menlo, Helvetica, sans-serif;
+   box-shadow: 8px 8px 5px #888888;
+}
+h2 {
+}
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<div id='map'></div>
+<script>
+  var map = L.mapbox.map("map", "lhl.idio4c9i").setView([35.69,139.74], 14);
+</script>
+
+</script>
+
+<div id="content">
+  <h2>Leonard is currently in Tokyo.</h2>
+  <p>More to come soon.</p>
+</div>
+
+</body>
+</html>
