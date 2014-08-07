@@ -2,6 +2,7 @@ locationsetbygps
 ================
 
 My travel blog and associated utilities
+http://locationsetbygps.com/
 
 * bin/
   * utilities, etc
