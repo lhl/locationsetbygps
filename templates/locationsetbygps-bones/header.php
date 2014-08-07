@@ -63,7 +63,7 @@
 
         <div id="inner-header" class="wrap cf">
 
-          <h2>Leonard is currently in <?php print $location['city']; ?>.</h2>
+          <h2><a href="/">Leonard is currently in <?php print $location['city']; ?>.</a></h2>
 
           <nav role="navigation">
             <?php wp_nav_menu(array(
