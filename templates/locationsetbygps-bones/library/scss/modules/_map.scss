@@ -1,0 +1,18 @@
+/******************************************************************
+Site Name:
+Author:
+
+Stylesheet: Map Styles
+
+******************************************************************/
+
+#map {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.leaflet-control-attribution, .mapbox-improve-map {
+  display: none;
+}
