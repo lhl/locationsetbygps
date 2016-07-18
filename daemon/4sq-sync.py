@@ -89,19 +89,19 @@ def main():
 
     try: 
       # bad data
-      if not checkin.has_key('venue'):
+      if 'venue' not in checkin:
         checkin['venue'] = {'location': {}}
-      if not checkin['venue']['location'].has_key('state'):
+      if 'state'  not in checkin['venue']['location']:
         checkin['venue']['location']['state'] = None
-      if not checkin['venue']['location'].has_key('city'):
+      if 'city'  not in checkin['venue']['location']:
         checkin['venue']['location']['city'] = None
-      if not checkin['venue']['location'].has_key('country'):
+      if 'country'  not in checkin['venue']['location']:
         checkin['venue']['location']['country'] = None
-      if not checkin['venue']['location'].has_key('cc'):
+      if 'cc'  not in checkin['venue']['location']:
         checkin['venue']['location']['cc'] = None
-      if not checkin['venue']['location'].has_key('lat'):
+      if 'lat'  not in checkin['venue']['location']:
         checkin['venue']['location']['lat'] = None
-      if not checkin['venue']['location'].has_key('lng'):
+      if 'lng'  not in checkin['venue']['location']:
         checkin['venue']['location']['lng'] = None
 
       data = ('foursquare', checkin['id'], checkin['type'], checkin['createdAt'], checkin['timeZoneOffset'], checkin['venue']['location']['lat'], checkin['venue']['location']['lng'], checkin['venue']['location']['city'], checkin['venue']['location']['state'], checkin['venue']['location']['country'], checkin['venue']['location']['cc'], json.dumps(checkin['venue']), json.dumps(checkin))
