@@ -9,10 +9,14 @@ import os
 from   pprint import pprint
 import sys
 import time
+import traceback
 
 
 # VARS
 SLEEP = 600 # Once every 10 min is fine
+
+# Max: https://developer.foursquare.com/docs/users/checkins
+LIMIT = 1
 
 
 ### PATHS
@@ -40,6 +44,8 @@ else:
 
 ### The Loop
 def main():
+  global LIMIT
+
   logging.info('STARTING new check...')
 
   # 4SQ  (if you need a new token run the bin/4sq-auth.py)
@@ -51,11 +57,24 @@ def main():
   conn = MySQLdb.connect(user=dbc['user'], passwd=dbc['passwd'], db=dbc['db'], charset='utf8')
 
   # Get Checkins
-  '''
-  TODO use vs time... https://developer.foursquare.com/docs/users/checkins
-  auto increment offsets until ok...
-  '''
-  checkins = client.users.checkins(params={'limit': 10}) 
+  sql = 'SELECT MAX(time) AS t FROM location'
+  cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+  cursor.execute(sql)
+  r = cursor.fetchone()
+  AFTER = r['t']
+  cursor.close()
+
+  try:
+    params = {'limit': LIMIT, 'sort': 'oldestfirst', 'afterTimestamp': AFTER}
+    checkins = client.users.checkins(params=params)
+  except:
+    logging.info('4SQ API ERROR') 
+    e = sys.exc_info()[0]
+    if e.__name__ == 'ValueConstraintError':
+      # will always throw <class 'pyasn1.type.error.ValueConstraintError'>
+      pass
+    else:
+      return
 
   sql = """INSERT INTO location
            (service, uid, type, time, tzoffset, lat, lon, city, state, country, cc, venue, json)
@@ -64,6 +83,7 @@ def main():
         """
   # for checkin in client.users.all_checkins():
   for checkin in checkins['checkins']['items']:
+
     try: 
       # bad data
       if not checkin.has_key('venue'):
