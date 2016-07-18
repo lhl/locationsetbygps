@@ -1,10 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 
 import foursquare
 import json
 import logging
-import MySQLdb
+import pymysql
 import os
 from   pprint import pprint
 import sys
@@ -16,7 +16,7 @@ import traceback
 SLEEP = 600 # Once every 10 min is fine
 
 # Max: https://developer.foursquare.com/docs/users/checkins
-LIMIT = 1
+LIMIT = 250
 
 
 ### PATHS
@@ -54,14 +54,17 @@ def main():
 
   # DB
   dbc = json.load(open('%s/db.creds' % PRIVATE))
-  conn = MySQLdb.connect(user=dbc['user'], passwd=dbc['passwd'], db=dbc['db'], charset='utf8')
+  conn = pymysql.connect(user=dbc['user'], passwd=dbc['passwd'], db=dbc['db'], charset='utf8')
 
   # Get Checkins
   sql = 'SELECT MAX(time) AS t FROM location'
-  cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+  cursor = conn.cursor(pymysql.cursors.DictCursor)
   cursor.execute(sql)
   r = cursor.fetchone()
   AFTER = r['t']
+  AFTER -= 10
+  if AFTER < 0:
+    AFTER = 0
   cursor.close()
 
   try:
@@ -103,19 +106,19 @@ def main():
 
       data = ('foursquare', checkin['id'], checkin['type'], checkin['createdAt'], checkin['timeZoneOffset'], checkin['venue']['location']['lat'], checkin['venue']['location']['lng'], checkin['venue']['location']['city'], checkin['venue']['location']['state'], checkin['venue']['location']['country'], checkin['venue']['location']['cc'], json.dumps(checkin['venue']), json.dumps(checkin))
 
-      cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+      cursor = conn.cursor(pymysql.cursors.DictCursor)
       cursor.execute(sql, data)
       conn.commit()
       logging.info('ADDED %s: %s' % (checkin['createdAt'], checkin['venue']['name']))
       cursor.close()
-    except MySQLdb.IntegrityError, e:
+    except pymysql.IntegrityError:
       logging.info('DUPE skipping %s: %s' % (checkin['createdAt'], checkin['venue']['name']))
     pass
 
-  print 'DONE'
+  logging.info('DONE')
 
 if __name__ == '__main__':
   while 1:
     main()
-    print 'SLEEPING for %ss' % SLEEP
+    logging.info('SLEEPING for %ss' % SLEEP)
     time.sleep(SLEEP)
